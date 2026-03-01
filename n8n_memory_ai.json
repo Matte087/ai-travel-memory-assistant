@@ -1,0 +1,574 @@
+{
+  "name": "WIKI_AI 📖 Cervello Privato🧠",
+  "nodes": [
+    {
+      "parameters": {
+        "availableInChat": true,
+        "agentName": "QA Chatbot",
+        "options": {}
+      },
+      "id": "0cf5885b-e0ac-4a5d-9e4f-e1278d756bcc",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -1792,
+        -1680
+      ],
+      "webhookId": "730867ba-6b0e-4151-8aee-a6a58e570cd5",
+      "typeVersion": 1.4
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a travel diary assistant.\n\nYou have access to an HTTP tool that queries a Notion database containing the user's past trips.\n\nWhen the user mentions a destination:\n\n1. You MUST call the HTTP tool.\n2. Extract the destination name from the user message.\n3. Use it to filter the database.\n4. Wait for the tool result.\n5. Answer ONLY using the data returned by the tool.\n6. If the tool returns no results, say that no visit is recorded.\n7. Never invent information."
+        }
+      },
+      "id": "0aba99cc-609c-49bd-b3a7-49a9457e9e5c",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1584,
+        -1424
+      ],
+      "typeVersion": 3.1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "d8dbdfc6-139a-43fe-8e8d-01e7c95f05b2",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -1824,
+        -1168
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "openAiApi": {
+          "id": "FlrYLdySmdmJRsBp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "c771e435-1a2b-48f1-8837-6e6adbeeadb7",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -1568,
+        -1168
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "formTitle": "QA Submission",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Città"
+            },
+            {
+              "fieldLabel": "Anno",
+              "fieldType": "number"
+            },
+            {
+              "fieldLabel": "Hotel"
+            },
+            {
+              "fieldLabel": "Ristoranti"
+            },
+            {
+              "fieldLabel": "Divertimento"
+            },
+            {
+              "fieldLabel": "Cosa ho fatto ",
+              "fieldType": "textarea"
+            },
+            {
+              "fieldLabel": "Consigli",
+              "fieldType": "textarea"
+            },
+            {
+              "fieldLabel": "Voto",
+              "fieldType": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8168d007-8e1b-4a62-b61b-7ae7b6217114",
+      "name": "On form submission",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -3072,
+        -1600
+      ],
+      "webhookId": "4017e60a-9851-4935-bef8-7e1210c4a182",
+      "typeVersion": 2.5
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 3,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2c77555f-438e-4756-8c5a-51b4cec4bd80",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "n8n.io"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "19138035-bf9e-44e3-adff-35a44eeeb68b",
+      "name": "is n8n.io email?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -3088,
+        -1216
+      ],
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38f6f1bc-e298-484c-b763-fd43b670b293",
+              "name": "isTrusted",
+              "type": "boolean",
+              "value": true
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "df93d168-8b06-407a-988d-a7b5d4e1ad7d",
+      "name": "isTrusted:true",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -2752,
+        -1360
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "38f6f1bc-e298-484c-b763-fd43b670b293",
+              "name": "isTrusted",
+              "type": "boolean",
+              "value": false
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "b5297a2c-7905-4bd6-9529-6420edea0317",
+      "name": "isTrusted:false",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -2752,
+        -1200
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {},
+      "id": "a804c2dc-fa50-461e-bd01-77ef574ada27",
+      "name": "ref",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -2496,
+        -1344
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the following question and answer and output relevant tags\n\nQuestion: {{ $json.Question }}\nAnswer: {{ $json.Answer }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a content tagging expert. Your task is to analyze Question and Answer submissions and generate relevant, descriptive tags that categorize the content based on topic, key concepts, and technical terms. Always provide 4-8 tags as a comma separated list. Keep tags short and focused in individual length.\n\nExample Output:\npartner, partnerships, agency, external contractors, lead referral "
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "id": "cb45d678-d8e5-496f-afc1-6ff7bef4fa34",
+      "name": "Add tags",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        -2272,
+        -1344
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "467b2d4a-7ba5-455f-ad83-406b49213d27",
+      "name": "OpenAI Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -2272,
+        -1136
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "openAiApi": {
+          "id": "FlrYLdySmdmJRsBp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "316db7a9-4239-802a-ab39-c6a3211485e2",
+          "mode": "list",
+          "cachedResultName": "viaggi ",
+          "cachedResultUrl": "https://www.notion.so/316db7a94239802aab39c6a3211485e2"
+        },
+        "title": "viaggi ",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Città|title",
+              "title": "={{ $('On form submission').item.json['Città'] }}"
+            },
+            {
+              "key": "Anno|date",
+              "date": "={{ $('On form submission').item.json.Anno }}\n"
+            },
+            {
+              "key": "Hotel|rich_text",
+              "textContent": "={{ $('On form submission').item.json.Hotel }}"
+            },
+            {
+              "key": "Ristoranti|rich_text",
+              "textContent": "={{ $('On form submission').item.json.Ristoranti }}"
+            },
+            {
+              "key": "Divertimento|rich_text",
+              "textContent": "={{ $('On form submission').item.json.Divertimento }}"
+            },
+            {
+              "key": "Cosa ho fatto |rich_text",
+              "textContent": "={{ $('On form submission').item.json['Cosa ho fatto '] }}"
+            },
+            {
+              "key": "Consigli |rich_text",
+              "textContent": "={{ $('On form submission').item.json.Consigli }}"
+            },
+            {
+              "key": "Voto|number",
+              "numberValue": "={{ $('On form submission').item.json.Voto }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        -2080,
+        -1136
+      ],
+      "id": "b85e95e7-2219-4a7f-9e1d-8344df401c14",
+      "name": "Create a database page",
+      "credentials": {
+        "notionApi": {
+          "id": "CNGZWHUXU7coUNXo",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/databases/316db7a94239802aab39c6a3211485e2/query",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -1280,
+        -1184
+      ],
+      "id": "65712c66-d338-4ccb-a5c5-486e8b00d997",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "SKWACZia605PGc3G",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 736,
+        "width": 1312
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -3200,
+        -1712
+      ],
+      "typeVersion": 1,
+      "id": "59359156-4a4b-483b-9749-864702a4fac1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 736,
+        "width": 720,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1856,
+        -1712
+      ],
+      "typeVersion": 1,
+      "id": "96eb3e35-454d-4bbd-ab0b-5f390024501c",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Travel Memory Storage Workflow\n\nThis workflow is designed to store personal travel memories.\nWhen a form is submitted, the trip details are automatically saved into a structured Notion database.\nEach entry preserves destinations, experiences, and notes for future reference and AI retrieval.",
+        "height": 192,
+        "width": 432,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2832,
+        -1648
+      ],
+      "typeVersion": 1,
+      "id": "8a35a1b5-b80a-40fb-b5de-c697d8c84960",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Travel Memory Retrieval Workflow\n\nThis workflow allows users to ask the AI about past trips.\nWhen a destination is mentioned, the AI queries the Notion database and retrieves the saved travel details.\nThe response is generated strictly from the stored data, ensuring accurate and personalized answers.",
+        "height": 176,
+        "width": 432
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1600,
+        -1680
+      ],
+      "typeVersion": 1,
+      "id": "1ea0d46a-82d4-4a6e-9038-9c837c708774",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "is n8n.io email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "is n8n.io email?": {
+      "main": [
+        [
+          {
+            "node": "isTrusted:true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "isTrusted:false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "isTrusted:true": {
+      "main": [
+        [
+          {
+            "node": "ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "isTrusted:false": {
+      "main": [
+        [
+          {
+            "node": "ref",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ref": {
+      "main": [
+        [
+          {
+            "node": "Add tags",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add tags": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Add tags",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "72a5906c-4753-4af7-b85b-6e5a520ed1e3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "791d9650e1108b70eac24b6a3c5b4d2966cf4571e58666e0cebfc3b294cd4e9d"
+  },
+  "id": "P352AjhCtk0aK4fe",
+  "tags": []
+}
